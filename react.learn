@@ -1,0 +1,145 @@
+// 一个组件接收一些参数，我们把这些参数叫做 props（“props” 是 “properties” 简写），
+// 然后通过 render 方法返回需要展示在屏幕上的视图的层次结构。
+
+
+// 可以通过在 React 组件的构造函数中设置 this.state 来初始化 state。
+// this.state 应该被视为一个组件的私有属性。
+// 构造函数是唯一可以给 this.state 赋值的地方， 其他地方应该调用 this.setState()
+
+
+// 函数组件
+// 如果你想写的组件只包含一个 render 方法，并且不包含 state，那么使用函数组件就会更简单。
+// 这个函数接收 props 作为参数，然后返回需要渲染的元素。函数组件写起来并不像 class 组件那么繁琐，
+// 很多组件都可以使用函数组件来写。
+// function Square(props) {
+//   return (
+//     <button className="square" onClick={props.onClick}>
+//       {props.value} // 这里去掉了this
+//     </button>
+//   );
+// }
+
+
+// JSX
+// 在 JSX 语法中，你可以在大括号内放置任何有效的 JavaScript 表达式。例如，2 + 2，user.firstName 
+// 或 formatName(user) 都是有效的 JavaScript 表达式。
+// JSX 也是一个表达式
+// 在编译之后，JSX 表达式会被转为普通 JavaScript 函数调用，并且对其取值后得到 JavaScript 对象。
+// 也就是说，你可以在 if 语句和 for 循环的代码块中使用 JSX，将 JSX 赋值给变量，把 JSX 当作参数传入，
+// 以及从函数中返回 JSX。
+// Babel 会把 JSX 转译成一个名为 React.createElement() 函数调用。
+
+// 注意： 组件名称必须以大写字母开头。
+// React 会将以小写字母开头的组件视为原生 DOM 标签。
+// JSX 允许在大括号中嵌入任何表达式
+
+
+// 纯函数
+// function sum(a, b) {
+//   return a + b;
+// }
+// 这样的函数被称为“纯函数”，因为该函数不会尝试更改入参，且多次调用下相同的入参始终返回相同的结果。
+// ** 所有 React 组件都必须像纯函数一样保护它们的 props 不被更改。 **
+
+
+// 生命周期方法
+// componentDidMount() 方法会在组件已经被渲染到 DOM 中后运行
+// 一旦组件从 DOM 中被移除，React 就会调用 componentWillUnmount() 生命周期方法
+
+
+// State 的更新可能是异步的
+// 出于性能考虑，React 可能会把多个 setState() 调用合并成一个调用。
+// 因为 this.props 和 this.state 可能会异步更新，所以你不要依赖他们的值来更新下一个状态。
+// 例如，此代码可能会无法更新计数器：
+//    Wrong
+//    this.setState({
+//      counter: this.state.counter + this.props.increment,
+//    });
+
+
+
+
+// 在 React 中另一个不同点是你不能通过返回 false 的方式阻止默认行为。你必须显式的使用 preventDefault 。
+// function handleClick(e) {
+//   e.preventDefault();
+//   console.log('The link was clicked.');
+// }
+
+// 在 JavaScript 中，class 的方法默认不会绑定 this。如果你忘记绑定 this.handleClick 并把它传入了 onClick，
+// 当你调用这个函数的时候 this 的值为 undefined。
+// 方法一
+// 此语法确保 `handleClick` 内的 `this` 已被绑定。
+// 注意: 这是 *实验性* 语法。
+// handleClick = () => {
+//   console.log('this is:', this);
+// }
+// 方法二
+// <button onClick={() => this.handleClick()} />
+
+
+// 向事件处理程序传递参数
+// 两种方法
+// <button onClick={(e) => this.deleteRow(id, e)}>Delete Row</button>
+// <button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
+// 在这两种情况下，React 的事件对象 e 会被作为第二个参数传递。
+
+
+// 阻止组件渲染
+// 在极少数情况下，你可能希望能隐藏组件，即使它已经被其他组件渲染。若要完成此操作，
+// 你可以让 render 方法直接返回 null，而不进行任何渲染。
+// 在组件的 render 方法中返回 null 并不会影响组件的生命周期。
+
+
+// 渲染多个组件
+// 可以通过使用 {} 在 JSX 内构建一个元素集合。
+// function NumberList(props) {
+//   const numbers = props.numbers;
+//   const listItems = numbers.map((number) =>
+//     <li>{number}</li>
+//   );
+//   return (
+//     <ul>{listItems}</ul>
+//   );
+// }
+
+
+
+// key 帮助 React 识别哪些元素改变了，比如被添加或删除。因此你应当给数组中的每一个元素赋予一个确定的标识。
+// 当元素没有确定 id 的时候，万不得已你可以使用元素索引 index 作为 key.
+// 如果列表项目的顺序可能会变化，我们不建议使用索引来用作 key 值，因为这样做会导致性能变差，还可能引起组件状态的问题。
+
+// 元素的 key 只有放在就近的数组上下文中才有意义。
+// function ListItem(props) {
+//   const value = props.value;
+//   return (
+//     // 错误！你不需要在这里指定 key：
+//     <li key={value.toString()}>
+//       {value}
+//     </li>
+//   );
+// }
+
+// function NumberList(props) {
+//   const numbers = props.numbers;
+//   const listItems = numbers.map((number) =>
+//     // 错误！元素的 key 应该在这里指定：
+//     <ListItem value={number} />
+//   );
+//   return (
+//     <ul>
+//       {listItems}
+//     </ul>
+//   );
+// }
+// 一个好的经验法则是：在 map() 方法中的元素需要设置 key 属性。
+// key 会传递信息给 React ，但不会传递给你的组件。如果你的组件中需要使用 key 属性的值，请用其他属性名显式传递这个值
+
+
+
+// props.children
+// 每个组件都可以获取到 props.children。它包含组件的开始标签和结束标签之间的内容。
+
+
+// 协调
+// 当组件的 props 或 state 发生变化时，React 通过将最新返回的元素与原先渲染的元素进行比较，来决定是否有必要进行一
+// 次实际的 DOM 更新。当它们不相等时，React 才会更新 DOM。这个过程被称为“协调”。
