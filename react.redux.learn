@@ -1,0 +1,10 @@
+// https://www.redux.org.cn/
+
+// Reducer
+// 编写专门的函数来决定每个 action 如何改变应用的 state，这个函数被叫做 reducer。
+// reducer 只是一个接收 state 和 action，并返回新的 state 的函数。
+
+// 只有一个单一的 store 和一个根级的 reduce 函数（reducer）。随着应用不断变大，你应该把根级的 reducer 
+// 拆成多个小的 reducers，分别独立地操作 state 树的不同部分，而不是添加新的 stores。
+
+// 要想更新 state 中的数据，你需要发起一个 action。Action 就是一个普通 JavaScript 对象 
