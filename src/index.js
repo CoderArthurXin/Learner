@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import './index.css';
 
 class Square extends React.Component {
@@ -17,6 +18,18 @@ class Square extends React.Component {
       </button>
     );
   }
+}
+
+Square.propTypes = {
+  // Warning: Failed prop type: Invalid prop `value` of type `string` supplied to `Square`, expected `number`.
+  // value: PropTypes.number
+
+  // correct
+  value: PropTypes.string,
+
+  // 如果不传，则会报 warning
+  // Warning: Failed prop type: The prop `value` is marked as required in `Square`, but its value is `undefined`.
+  // value: PropTypes.string.isRequired
 }
 
 class Board extends React.Component {
