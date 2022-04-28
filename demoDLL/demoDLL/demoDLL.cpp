@@ -90,19 +90,14 @@ EXTERN_C void mallocFree(void* pointer) {
 	}
 }
 
-EXTERN_C void getVersionEx(char* buffer, int size) {
+EXTERN_C void getVersionEx(char* buffer) {
 	Logger->info(__FUNCTION__);
 	if (buffer == nullptr) {
+		Logger->info("pointer is null");
 		return;
 	}
 
-	sprintf_s(buffer, size, "%d.%d.%d", 3, 2, 3);
-}
-
-EXTERN_C void getVersionEy(char* pointer) {
-	Logger->info(__FUNCTION__);
-	pointer = (char*)malloc(10);
-	sprintf_s(pointer, 10, "%d.%d.%d", 3, 2, 3);
+	strcpy(buffer, "1.0.0.0.0.2");
 }
 
 typedef struct {
@@ -112,6 +107,7 @@ typedef struct {
 
 EXTERN_C void getStudentInfo(Student* p) {
 	Logger->info(__FUNCTION__);
+
 	strcpy(p->name, "IamFFI");
 	p->age = 123;
 }
