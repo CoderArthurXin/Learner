@@ -9,6 +9,10 @@
 #define new DEBUG_NEW
 #endif
 
+#include "spdlog/sinks/rotating_file_sink.h"
+
+auto Logger = spdlog::rotating_logger_mt("ffi", "rzffi.log", 1048576 * 5, 3);
+
 //
 //TODO:  如果此 DLL 相对于 MFC DLL 是动态链接的，
 //		则从此 DLL 导出的任何调入
@@ -68,6 +72,8 @@ EXTERN_C int add(int x, int y) {
 }
 
 EXTERN_C const char* getVersion() {
+	Logger->info(__FUNCTION__);
+
 	const int SIZE = 100;
 	char* buffer = (char*)malloc(SIZE);
 	memset(buffer, 0, SIZE);
@@ -77,6 +83,7 @@ EXTERN_C const char* getVersion() {
 }
 
 EXTERN_C void mallocFree(void* pointer) {
+	Logger->info(__FUNCTION__);
 	if (pointer != nullptr) {
 		free(pointer);
 		pointer = nullptr;
@@ -84,6 +91,7 @@ EXTERN_C void mallocFree(void* pointer) {
 }
 
 EXTERN_C void getVersionEx(char* buffer, int size) {
+	Logger->info(__FUNCTION__);
 	if (buffer == nullptr) {
 		return;
 	}
@@ -92,6 +100,7 @@ EXTERN_C void getVersionEx(char* buffer, int size) {
 }
 
 EXTERN_C void getVersionEy(char* pointer) {
+	Logger->info(__FUNCTION__);
 	pointer = (char*)malloc(10);
 	sprintf_s(pointer, 10, "%d.%d.%d", 3, 2, 3);
 }
@@ -102,6 +111,7 @@ typedef struct {
 }Student;
 
 EXTERN_C void getStudentInfo(Student* p) {
+	Logger->info(__FUNCTION__);
 	strcpy(p->name, "IamFFI");
 	p->age = 123;
 }
