@@ -1,0 +1,11 @@
+﻿; demoDLL.def: 声明 DLL 的模块参数。
+
+LIBRARY
+
+EXPORTS
+    add
+	mallocFree
+	getVersion
+	getVersionEx
+	getVersionEy
+	getStudentInfo
