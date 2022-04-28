@@ -125,3 +125,9 @@ EXTERN_C void testPtrPtr(char** p) {
 
 	strcpy(*p, "!!success");
 }
+
+EXTERN_C void testOutput(int* pi, double* pd, float* pf) {
+	*pi = 10;
+	*pd = 11;
+	*pf = 19.90;
+}

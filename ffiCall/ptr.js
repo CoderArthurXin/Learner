@@ -1,3 +1,5 @@
+const ref = require('ref-napi');
+
 function test_ptr(_handle) {
 
     let voidPtr = ref.refType('void');
@@ -7,6 +9,8 @@ function test_ptr(_handle) {
     let charPtrPtr = ref.refType(charPtr);
 
     let intPtr = ref.refType('int');
+    let doublePtr = ref.refType('double');
+    let floatPtr = ref.refType('float');
     let stringPtr = ref.refType('string'); 
     {
         console.log('voidPtr: ', voidPtr); // { indirection: 2, name: 'void*' }
@@ -86,6 +90,24 @@ function test_ptr(_handle) {
         // ddd 和 _ptr 是同一个指针，可以从其buffer地址看出
         console.log('~', ddd); // ~ <Buffer@0x000001BED8877DF0 21 21 73 75 63 63 65 73, type: { indirection: 2, name: 'char*' }>
         console.log('#', ddd.readCString()); // # !!success
+    }
+
+    {
+        let _intPtr = ref.alloc(intPtr);
+        let _dbPtr = ref.alloc(doublePtr);
+        let _fltPtr = ref.alloc(floatPtr);
+
+        console.log('**', _dbPtr.readDoubleLE());
+
+        _handle.testOutput(_intPtr, _dbPtr, _fltPtr);
+
+        console.log('$$', _intPtr.readInt16BE()); // 2560 错误
+        console.log('$$', _intPtr.readInt16LE()); // 10 正确
+
+        // RangeError [ERR_BUFFER_OUT_OF_BOUNDS]: Attempt to access memory outside buffer bounds
+        // console.log('&&', _dbPtr.readDoubleLE()); 
+
+        console.log('&&', _fltPtr.readFloatLE()); // 19.899999618530273 正确
     }
 }
 

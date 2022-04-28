@@ -8,4 +8,5 @@ EXPORTS
 	getVersion
 	getVersionEx
 	testPtrPtr
+	testOutput
 	getStudentInfo
