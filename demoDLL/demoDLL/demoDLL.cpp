@@ -111,3 +111,17 @@ EXTERN_C void getStudentInfo(Student* p) {
 	strcpy(p->name, "IamFFI");
 	p->age = 123;
 }
+
+EXTERN_C void testPtrPtr(char** p) {
+	if (p == nullptr) {
+		Logger->info("p is nullptr");
+		return;
+	}
+
+	if (*p == nullptr) {
+		Logger->info("*p is nullptr");
+		return;
+	}
+
+	strcpy(*p, "!!success");
+}

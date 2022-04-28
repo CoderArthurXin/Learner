@@ -7,4 +7,5 @@ EXPORTS
 	mallocFree
 	getVersion
 	getVersionEx
+	testPtrPtr
 	getStudentInfo

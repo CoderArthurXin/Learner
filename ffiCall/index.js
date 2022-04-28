@@ -31,6 +31,19 @@ let stringPtr = ref.refType('string');
   console.log('charPtr: ', charPtr); //  { indirection: 2, name: 'char*' }
   console.log('charPtrPtr: ', charPtrPtr); //  { indirection: 3, name: 'char**' }
 
+  let bufPtr = ref.alloc(charPtr);
+  let bufPtrPtr = ref.alloc(charPtrPtr);
+
+  console.log(bufPtr); // <Buffer@0x0000014BD5021C70 00 00 00 00 00 00 00 00, type: { indirection: 2, name: 'char*' }>
+  console.log(bufPtrPtr); // <Buffer@0x0000014BD5021CD0 00 00 00 00 00 00 00 00, type: { indirection: 3, name: 'char**' }>
+
+  let bufPtrDf = bufPtr.deref(); 
+  let bufPtrPtrDf = bufPtrPtr.deref();
+  // <Buffer@0x0000000000000000 type: { alignment: 1, name: 'char', ffi_type: <Buffer@0x00007FFCA51DB7C0 name: 'char'> }>
+  console.log(bufPtrDf);
+  // <Buffer@0x0000000000000000 type: { indirection: 2, name: 'char*' }>
+  console.log(bufPtrPtrDf);
+
   console.log('intPtr: ', intPtr); // { indirection: 2, name: 'int*' }
   console.log('stringPtr: ', stringPtr); // { indirection: 2, name: 'CString*' }
 }
@@ -40,6 +53,7 @@ let _handle = ffi.Library(DLL_PATH, {
   mallocFree: ['void', ['pointer']],
   getVersion: ['pointer', []],
   getVersionEx: ['void', [charPtr]],
+  testPtrPtr: ['void', [charPtrPtr]],
 });
 
 //////////////////////////////////////////////////////////////////
@@ -76,7 +90,7 @@ let _handle = ffi.Library(DLL_PATH, {
 
     // 里面还是使用Buffer分配内存？
     let v2_2 = ref.alloc(charPtr);
-    
+
     // ..v2_2: <Buffer@0x00000237A67A1160 00 00 00 00 00 00 00 00, type: { indirection: 2, name: 'char*' }>
     console.log('...v2_2:', v2_2);
 
@@ -91,4 +105,22 @@ let _handle = ffi.Library(DLL_PATH, {
   } catch(e) {
     console.log(e);
   }
+}
+
+// 测试指针的指针
+{
+  let _ptr = ref.alloc(charPtr);
+  let _ptrptr = ref.alloc(charPtrPtr, _ptr);
+
+  _handle.testPtrPtr(_ptrptr);
+
+  // bufffer 存的就是 _ptr 的地址 f0 7d 87 d8 be 01
+  console.log('*', _ptrptr); // * <Buffer@0x000001BED8877BF0 f0 7d 87 d8 be 01 00 00, type: { indirection: 3, name: 'char**' }>
+  console.log('$', _ptr); // $ <Buffer@0x000001BED8877DF0 21 21 73 75 63 63 65 73, type: { indirection: 2, name: 'char*' }>
+  console.log('&', _ptr.readCString()); // !!success
+
+  let ddd = _ptrptr.deref(); 
+  // ddd 和 _ptr 是同一个指针，可以从其buffer地址看出
+  console.log('~', ddd); // ~ <Buffer@0x000001BED8877DF0 21 21 73 75 63 63 65 73, type: { indirection: 2, name: 'char*' }>
+  console.log('#', ddd.readCString()); // # !!success
 }
